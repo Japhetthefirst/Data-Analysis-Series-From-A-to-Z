@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NHS A&E Performance Dashboard — Technical Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#10151C; --surface:#171D27; --surface2:#1C2330; --border:#2A3340;
+  --text:#E6E9EE; --dim:#8D97A5; --blue:#5B9BD5; --amber:#E3A857;
+  --red:#D9695F; --green:#6FB88A;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth; scroll-padding-top:24px;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:'IBM Plex Sans',sans-serif; font-size:15.5px; line-height:1.65;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:radial-gradient(circle,#2A3340 0.6px,transparent 0.6px);
+  background-size:26px 26px; opacity:.35;
+}
+body::after{
+  content:""; position:fixed; top:-10%; left:10%; width:50vw; height:50vw; z-index:0; pointer-events:none;
+  background:radial-gradient(circle, rgba(91,155,213,.10), rgba(227,168,87,.06) 45%, transparent 70%);
+  filter:blur(10px);
+}
+h1,h2,h3{font-family:'Fraunces',serif; font-weight:600; letter-spacing:-.01em; margin:0;}
+code,.mono{font-family:'IBM Plex Mono',monospace;}
+a{color:var(--blue);}
+.wrap{position:relative; z-index:1; display:flex; max-width:1180px; margin:0 auto;}
+nav.side{
+  width:230px; flex-shrink:0; position:sticky; top:0; align-self:flex-start;
+  height:100vh; overflow-y:auto; padding:34px 18px 34px 28px; border-right:1px solid var(--border);
+}
+nav.side .brand{font-family:'Fraunces',serif; font-weight:600; font-size:17px; margin-bottom:28px; color:var(--text);}
+nav.side a{display:block; color:var(--dim); text-decoration:none; font-size:13.5px; padding:5px 0; border-left:2px solid transparent; padding-left:10px; margin-left:-12px; transition:color .15s, border-color .15s;}
+nav.side a:hover{color:var(--text); border-color:var(--amber);}
+main{flex:1; min-width:0; padding:56px 48px 100px;}
+.hero{padding-bottom:40px; border-bottom:1px solid var(--border); margin-bottom:48px;
+  opacity:0; animation:rise .7s ease forwards .05s;}
+@keyframes rise{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+.hero h1{font-size:clamp(28px,4vw,42px); max-width:16ch;}
+.hero p.sub{color:var(--dim); font-size:16px; max-width:58ch; margin-top:14px;}
+.stats{display:flex; gap:0; margin-top:32px; flex-wrap:wrap;}
+.stat{padding:0 28px 0 0; margin-right:28px; border-right:1px solid var(--border);}
+.stat:last-child{border-right:none;}
+.stat .n{font-family:'Fraunces',serif; font-weight:800; font-size:30px; color:var(--amber);}
+.stat .l{color:var(--dim); font-size:12.5px; margin-top:2px;}
+section{max-width:760px; margin-bottom:56px; scroll-margin-top:24px;}
+section h2{font-size:23px; margin-bottom:6px;}
+section .kicker{color:var(--blue); font-family:'IBM Plex Mono',monospace; font-size:12.5px; margin-bottom:6px;}
+section p{max-width:70ch;}
+section ul, section ol{padding-left:20px; max-width:68ch;}
+section li{margin-bottom:8px;}
+.card{background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--amber); padding:16px 18px; margin:14px 0; border-radius:3px;}
+.card.ok{border-left-color:var(--green);}
+.card h4{font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:14.5px; margin-bottom:6px; color:var(--text);}
+.card p{margin:0; font-size:14px; color:var(--dim);}
+table{width:100%; border-collapse:collapse; margin:16px 0; font-size:13.5px;}
+th{text-align:left; color:var(--dim); font-weight:500; font-size:12px; padding:8px 10px; border-bottom:1px solid var(--border);}
+td{padding:9px 10px; border-bottom:1px solid var(--border); vertical-align:top;}
+tr:hover td{background:var(--surface2);}
+td code{color:var(--amber); font-size:12.5px;}
+.tag{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11px; padding:2px 7px; border-radius:3px; margin-left:6px;}
+.tag.v{background:rgba(111,184,138,.15); color:var(--green);}
+.tag.a{background:rgba(217,105,95,.15); color:var(--red);}
+footer{max-width:760px; color:var(--dim); font-size:13px; padding-top:24px; border-top:1px solid var(--border);}
+@media (max-width:860px){
+  nav.side{display:none;}
+  main{padding:36px 22px 80px;}
+  .stats{gap:18px;}
+  .stat{padding-right:18px; margin-right:18px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="side">
+  <div class="brand">A&E Documentation</div>
+  <a href="#problem">The Problem</a>
+  <a href="#data">Data &amp; Scope</a>
+  <a href="#quality">Data Quality</a>
+  <a href="#orgs">Org Register</a>
+  <a href="#model">Data Model</a>
+  <a href="#measures">Measure Catalog</a>
+  <a href="#dashboard">Dashboard</a>
+  <a href="#findings">Findings</a>
+  <a href="#limits">Limitations</a>
+</nav>
+<main>
+  <div class="hero">
+    <h1>Technical Documentation</h1>
+    <p class="sub">NHS England A&amp;E 4-Hour Performance Dashboard — the full process behind the Executive Overview and Trust Drill-Down pages, including every data problem found along the way.</p>
+    <div class="stats">
+      <div class="stat"><div class="n">40</div><div class="l">monthly source files</div></div>
+      <div class="stat"><div class="n">214</div><div class="l">organisations profiled</div></div>
+      <div class="stat"><div class="n">3</div><div class="l">trust mergers confirmed</div></div>
+      <div class="stat"><div class="n">6</div><div class="l">data anomalies caught</div></div>
+    </div>
+  </div>
+
+  <section id="problem">
+    <div class="kicker">01</div>
+    <h2>The Problem</h2>
+    <p>A Regional Director of Urgent &amp; Emergency Care needs to decide which trusts in their region need support to reach the national 4-hour A&amp;E target. A regional average close to target can hide a wide spread — some trusts comfortably ahead, others badly behind — and without knowing which trusts are pulling the average down, support gets spread evenly instead of where it's needed.</p>
+    <p>The dashboard ranks trusts by <strong>patients short of target</strong>, not raw percentage — a 5-point miss at a 30,000-attendance trust represents more unmet need than a 10-point miss at a 3,000-attendance trust, and a percentage-only ranking gets that backwards.</p>
+  </section>
+
+  <section id="data">
+    <div class="kicker">02</div>
+    <h2>Data &amp; Scope</h2>
+    <p>Source: <a href="https://www.england.nhs.uk/statistics/statistical-work-areas/ae-waiting-times-and-activity/" target="_blank" rel="noopener">NHS England A&amp;E Attendances and Waiting Times</a> — 40 monthly CSVs, April 2023 to July 2026, no month column in the raw files (derived from each file's name during import).</p>
+    <p><strong>Grain:</strong> one row = one organisation, one month. <strong>Scope:</strong> only organisations with nonzero Type 1 (major A&amp;E) attendance in at least one month are included — a filter applied at Org Code level after combining all files, not per-file. This is a stated, data-inferred assumption, not verified against an official ODS provider-type list.</p>
+    <p><strong>Target source:</strong> 76% (FY2023/24), 78% (FY2024/25 &amp; FY2025/26, the latter independently verified against primary NHS planning guidance), 82% (FY2026/27 onward) — all sourced from NHS England's own fiscal-year planning documents, not secondary reporting.</p>
+  </section>
+
+  <section id="quality">
+    <div class="kicker">03</div>
+    <h2>Data Quality Investigation</h2>
+    <p>Every anomaly below was traced to a specific cause and either fixed or documented as an explained limitation — none were assumed or silently dropped.</p>
+    <div class="card">
+      <h4>Hidden national-aggregate row <span class="tag a">critical</span></h4>
+      <p>One row carried a national monthly total (1,466,119 Type 1 attendances) disguised as an ordinary organisation row, inflating every descriptive statistic. Found via Excel descriptive stats — a single-trust maximum that size is implausible. Removed; post-removal maximum dropped to a realistic 36,434.</p>
+    </div>
+    <div class="card">
+      <h4>Inconsistent footer rows</h4>
+      <p>Every file ends with a "Total" row, but casing/spacing varies across five distinct forms (<code>TOTAL</code>, <code>Total</code>, <code>TOTAl</code>, <code>"Total "</code>, <code>"TOTAL "</code>) — roughly splitting before/after mid-2024, suggesting an NHS export format change. Fixed with a trim+uppercase filter rather than an exact-match list, so it survives any further casing variant.</p>
+    </div>
+    <div class="card">
+      <h4>September 2024 schema drift</h4>
+      <p>One file carries six extra blank trailing columns and a stray header named "a." Verified empty in every row before being safely dropped — combine logic keyed by column name, not position, so the extra columns never shifted anything else.</p>
+    </div>
+    <div class="card">
+      <h4>RK9 — false 100% performance, April &amp; May 2023</h4>
+      <p>Zero recorded breaches against a normal ~8,000 monthly attendance volume, two consecutive months. Confirmed as a genuine source submission error via both a Power BI table and an independent raw-CSV check. Documented and excluded from that trust's trend narrative — not corrected in the source.</p>
+    </div>
+    <div class="card">
+      <h4>NDA57 — impossible admission value</h4>
+      <p>Shows 1 admission against 0 attendances in April 2023. Traced to Haslemere Minor Injuries Unit, a Type 3 facility with no emergency admission pathway by design. Out of scope (zero Type 1 activity throughout its history) so it does not affect any measure — logged as a documented, uncorrected source anomaly.</p>
+    </div>
+  </section>
+
+  <section id="orgs">
+    <div class="kicker">04</div>
+    <h2>Organisation Register</h2>
+    <p>Of 214 distinct organisations, 34 had incomplete month coverage. Each was investigated individually by name, not assumed from the gap pattern alone.</p>
+    <table>
+      <tr><th>Predecessor</th><th>Successor</th><th>Date</th><th>Verification</th></tr>
+      <tr><td><code>RAP</code> North Middlesex</td><td><code>RAL</code> Royal Free London</td><td>1 Jan 2025</td><td>Step-jump confirmed in successor's chart</td></tr>
+      <tr><td><code>RVJ</code> North Bristol</td><td><code>RA7</code> Bristol NHS FT</td><td>1 Jul 2026</td><td>Step-jump confirmed in successor's chart</td></tr>
+      <tr><td><code>RVY</code> Southport &amp; Ormskirk</td><td><code>RBN</code> Mersey &amp; West Lancs</td><td>1 Jul 2023</td><td>Exit window matches dissolution date exactly</td></tr>
+    </table>
+    <p>The remaining ~31 discontinuous codes were checked by organisation name and confirmed to be GP out-of-hours services, walk-in centres, and urgent treatment centres — minor-care providers outside the dashboard's Type 1 scope, not mergers or errors.</p>
+    <p style="color:var(--dim); font-size:13.5px;">Three predecessor→successor pairings were initially hypothesised purely from date proximity and disproven once real organisation names were checked — a standing reminder that timing coincidence is not evidence.</p>
+  </section>
+
+  <section id="model">
+    <div class="kicker">05</div>
+    <h2>Data Model</h2>
+    <ul>
+      <li><strong>Fact table</strong> — one row per in-scope organisation per month, all attendance/breach/admission measures.</li>
+      <li><strong>Org Code dimension</strong> — Org Code only, deliberately with no name attached. Organisation names are not stable (two trusts gained "Teaching" status mid-series), so names stay in the fact table as historical, point-in-time attributes rather than being forced into a one-name-per-code lookup.</li>
+      <li><strong>dim_calendar</strong> — independently generated daily calendar (not derived from which months exist in the data), April 2023–July 2026, with fiscal-year columns throughout (NHS runs April–March). Marked as the model's official Date table.</li>
+      <li>Relationships: single-direction, many-to-one, dimension → fact. No ambiguous paths.</li>
+    </ul>
+  </section>
+
+  <section id="measures">
+    <div class="kicker">06</div>
+    <h2>Measure Catalog</h2>
+    <p>Every measure was validated by hand against the raw source CSVs before being trusted — no measure went into the dashboard unverified.</p>
+    <table>
+      <tr><th>Measure</th><th>What it does</th><th>Validated</th></tr>
+      <tr><td><code>Type 1 4-Hour Performance %</code></td><td>Core headline rate</td><td>RA7 Apr-23 = 66.25% <span class="tag v">match</span></td></tr>
+      <tr><td><code>Dynamic Target %</code></td><td>Applicable NHS target by fiscal year</td><td>4 values, each independently sourced</td></tr>
+      <tr><td><code>Variance</code></td><td>Performance − Target, in points</td><td>RA7 Apr-23 = −9.8pp <span class="tag v">match</span></td></tr>
+      <tr><td><code>Gap in Patients</code></td><td>Patients short of target, by volume</td><td>RRK Jul-26 = 7,314 <span class="tag v">match</span></td></tr>
+      <tr><td><code>Type 1 Performance YoY</code></td><td>Change vs. same month last year</td><td>RA7 Apr-24 vs Apr-23 = −1.7pp <span class="tag v">match</span></td></tr>
+      <tr><td><code>Type 1 12-Month Rolling %</code></td><td>Trailing 12-month rate, totals-weighted</td><td>RA7 Mar-24 = 63.3% <span class="tag v">match</span></td></tr>
+      <tr><td><code>Admission Conversion Rate %</code></td><td>Share of attendances resulting in admission</td><td>RA7 Apr-24 = 33.9% <span class="tag v">match</span></td></tr>
+      <tr><td><code>Type 1 Status</code></td><td>Distinguishes no-data from zero-activity months</td><td>Logic-tested on known merger cases</td></tr>
+    </table>
+    <p style="color:var(--dim); font-size:13.5px;"><code>Gap in Patients</code> replaced an earlier Variance × Volume approach, rejected for producing a unit with no real meaning. The chosen formula returns an actual patient count and sorts correctly without extra handling for over-performing trusts.</p>
+  </section>
+
+  <section id="dashboard">
+    <div class="kicker">07</div>
+    <h2>Dashboard Architecture</h2>
+    <p>Two pages, each answering one question — deliberately not combined into one dense view, given the audience (a Regional Director, reviewing quarterly) is a strategic decision-maker, not a day-to-day analyst.</p>
+    <div class="card ok">
+      <h4>Page 1 — Executive Overview</h4>
+      <p>"Where do I focus right now?" Four KPI cards, a trust table ranked by Gap in Patients, a month/region filter defaulting to the latest complete month, and a plain-language insight sentence stating the regional picture.</p>
+    </div>
+    <div class="card ok">
+      <h4>Page 2 — Trust Drill-Down</h4>
+      <p>"Is this a new problem or a persistent one?" Reached by drilling into any trust row. Full 40-month trend against the target line, a patient-gap column chart, and a clickable period card showing exact figures for whichever month is selected.</p>
+    </div>
+  </section>
+
+  <section id="findings">
+    <div class="kicker">08</div>
+    <h2>Key Findings</h2>
+    <ol>
+      <li><strong>Not every low performer has the same story.</strong> One trust has run flat, underperforming for the full 40 months — its target moved, not its performance. Another trust genuinely improved for two years, then declined sharply. Treating both as "below target" would miss that they need different interventions entirely.</li>
+      <li><strong>Percentage rankings and volume-weighted rankings disagree.</strong> The trust with the single worst percentage miss is rarely the trust with the most patients affected — ranking by raw percentage alone would have sent support to the wrong places.</li>
+      <li><strong>The best performer by percentage isn't the best performer by scale.</strong> The dashboard highlights the trust handling the largest patient volume while still beating target, not the smallest trust with the highest percentage.</li>
+      <li><strong>Winter pressure is real but not uniform.</strong> A seasonal dip (roughly November–January) appears in every year of data, but its depth and shape vary meaningfully year to year — flagged directly in the dashboard so a month-to-month comparison isn't misread as a new problem.</li>
+    </ol>
+  </section>
+
+  <section id="limits">
+    <div class="kicker">09</div>
+    <h2>Known Limitations</h2>
+    <ul>
+      <li>One merger (RAP → RAL) is validated at chart level only, not yet with a row-level raw-CSV spot check like the other two mergers received.</li>
+      <li>"How does this month compare to last winter?" isn't answerable at a glance — it requires scrolling the trend chart manually.</li>
+      <li>Row-Level Security and mobile layout are explicitly out of scope — single fictional audience, portfolio deployment via GitHub rather than Power BI Service.</li>
+      <li>14 raw columns (secondary attendance/admission categories, long-wait indicators) are present in the model but unused by any current measure — kept rather than removed, to avoid a one-way Power Query change for a possible future extension.</li>
+    </ul>
+  </section>
+
+  <footer>
+    Built by Japhet Olusegun. Data: NHS England, public and organisation-level only. Full source in the project repository.
+  </footer>
+</main>
+</div>
+</body>
+</html>
