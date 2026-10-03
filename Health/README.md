@@ -49,6 +49,7 @@ Use the Page 1 ranked list — sorted by patients short of target, not percentag
 The polished dashboard is the end result. The actual work was finding and fixing the problems above — and deciding, with evidence, which anomalies mattered and which didn't. The full process — every data-quality check, every DAX measure's validation against the raw source files, the complete trust-merger investigation, and every design decision along the way — is documented in:
 
 📄 **[Full Technical Documentation](./docs/documentation.md)**
+🔗 **[Web View Full Technical Documentation](https://japhetthefirst.github.io/Data-Analysis-Series-From-A-to-Z/)**
 
 That document is intentionally the unpolished one: the dead ends, the things that turned out to be nothing, and the things that turned out to matter.
 
