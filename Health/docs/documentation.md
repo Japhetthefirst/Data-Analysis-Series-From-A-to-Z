@@ -1,14 +1,14 @@
 A&E Documentation
 
-- [01 - The Problemm](#01-problem) 
-- [Data & Scope](#data) 
-- [Data Quality](#quality) 
-- [Org Register](#orgs) 
-- [Data Model](#model) 
-- [Measure Catalog](#measures) 
-- [Dashboard](#dashboard) 
-- [Findings](#findings) 
-- [Limitations](#limits)
+- [01 - The Problem](#01---the-problem)
+- [02 - Data & Scope](#02---data--scope)
+- [03 - Data Quality Investigation](#03---data-quality-investigation)
+- [04 - Organisation Register](#04---organisation-register)
+- [05 - Data Model](#05---data-model)
+- [06 - Measure Catalog](#06---measure-catalog)
+- [07 - Dashboard Architecture](#07---dashboard-architecture)
+- [08 - Key Findings](#08---key-findings)
+- [09 - Known Limitations](#09---known-limitations)
 
 # Technical Documentation
 
