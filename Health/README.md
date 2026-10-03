@@ -19,13 +19,13 @@ A regional average can hide a wide spread — some trusts hitting target comfort
 
 ## The Five Questions
 
-### 1. What problem were you solving?
+### 1. What problem did i solving?
 A Regional Director overseeing multiple NHS trusts needs to decide where to send staff and resources to improve A&E performance against the national 4-hour target. Spreading support evenly — or trusting the regional average — wastes it on trusts that are already fine. This dashboard identifies which trusts are actually behind, ranked by real patient impact rather than raw percentage.
 
-### 2. Where did the data come from?
+### 2. Where did i data come from?
 Official [NHS England A&E Attendances and Waiting Times statistics](https://www.england.nhs.uk/statistics/statistical-work-areas/ae-waiting-times-and-activity/) — 40 separate monthly CSV files (April 2023–July 2026), one file per month, no month column included in the source. Target percentages (76%/78%/82%) were sourced directly from NHS England's own planning guidance documents for each fiscal year, not from secondary reporting.
 
-### 3. What issues did you find in the data?
+### 3. What issues did i find in the data?
 More than I expected going in. A few highlights (the full list is in the technical documentation):
 - A hidden **national-total row** sitting among the per-trust rows, inflating every monthly maximum by roughly 40x until it was isolated and removed.
 - Inconsistent **footer "Total" rows** across files — five different casings/spacings of the word "Total," requiring a case-insensitive, whitespace-trimmed filter rather than a simple exact match.
@@ -33,7 +33,7 @@ More than I expected going in. A few highlights (the full list is in the technic
 - A trust with **0 attendances recorded but 1 admission** in the same month — traced to a specific out-of-scope minor injuries unit, documented, and confirmed not to affect any measure.
 - A trust showing a **false 100% performance** for two consecutive months — zero breaches recorded against a normal attendance volume, a genuine submission error in the source file, confirmed and excluded from that trust's trend narrative.
 
-### 4. What did your analysis reveal?
+### 4. What did my analysis reveal?
 - The worst-performing trusts aren't a single story. One trust has been flat and underperforming for the entire 40-month period — its *target* moved, not its performance, which is a very different problem from a trust that was genuinely improving and has recently declined.
 - Ranking by raw percentage and ranking by **patient volume** produce materially different "worst 5" lists. The dashboard's primary metric — patients short of target — is the one that actually reflects where the pressure is.
 - A's genuine best-practice trust isn't the one with the highest percentage; it's the one hitting target at real scale, handling several times the patient volume of the "top" trust by raw percentage.
