@@ -134,7 +134,7 @@ Two pages, each answering one question — deliberately not combined into one de
 
 
 
-## 09 -Known Limitations
+## 09 - Known Limitations
 
 - One merger (RAP → RAL) is validated at chart level only, not yet with a row-level raw-CSV spot check like the other two mergers received.
 - "How does this month compare to last winter?" isn't answerable at a glance — it requires scrolling the trend chart manually.
