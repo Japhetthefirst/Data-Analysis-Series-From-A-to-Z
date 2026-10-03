@@ -1,17 +1,16 @@
-# Excel-Data-Analysis-Series-From-A-to-Z
-Welcome to my Excel Data Analysis A–Z Series — a personal learning and project journey through 26 different dataset genres, each representing a letter of the alphabet (A–Z).
+# Data-Analysis-Series-From-A-to-Z
+Welcome to my Data Analysis A–Z Series — a personal learning and project journey through 26 different dataset genres, each representing a letter of the alphabet (A–Z).
 
-This series showcases my growing skills in data cleaning, transformation, visualization, and insights generation using Microsoft Excel, Power Query, and Power Pivot.
-Each letter stands for a unique dataset category — from Automobiles (A) to Zoology (Z) — analyzed end-to-end using only Excel tools.
+This series showcases my growing skills in data cleaning, transformation, visualization, and insights generation using Excel and Power BI.
+Each letter stands for a unique dataset category — from A - Z — analyzed end-to-end/
 
 ---
 
 ## 🎯 Purpose
 The goal of this project series is to:
-- Strengthen my data analytics skills using Excel
+- Strengthen my data analytics skills
 - Build a portfolio of real-world data projects
-- Demonstrate proficiency in Power Query, Pivot Tables, DAX, and Dashboards
-- Explore how Excel alone can perform advanced EDA (Exploratory Data Analysis)
+- Demonstrate proficiency in Data Tools
 
 ---
 
@@ -27,7 +26,7 @@ Each dataset (A–Z) will include:
 ## 🧰 Tools & Skills Used
 - Microsoft Excel
 - Power Query (ETL & cleaning)
-- Power Pivot (data modeling & DAX)
+- Data modeling & DAX
 - Pivot Tables & Charts
 - Dashboard design & interactivity
 - Statistical Concepts: Correlation, Regression, Distribution, Central Tendency
@@ -37,15 +36,15 @@ Each dataset (A–Z) will include:
 
 ## 🧠 Learning Goals
 By the end of this series, I aim to:
-- Master Excel as a complete analytics tool (no external software)
+- Build proficiency in Data analytics tools
 - Develop a strong analytical mindset
-- Build a diverse portfolio covering all major data domains
+- Build a diverse portfolio covering various data domains
 
 ---
 
 ## 👨‍💻 Author
 Olusegun Japhet
-📍 Data Enthusiast | Excel Analyst | Lifelong Learner
+📍 Data Analyst Associate
 
 Follow/Connect with me on Linkedin👇:
 🔗 LinkedIn: www.linkedin.com/in/japhetolusegunabiola
@@ -55,4 +54,4 @@ Follow/Connect with me on Linkedin👇:
 ## 🚀 Stay Tuned
 
 Each new dataset analysis will be uploaded here with visuals, insights, and dashboards — from A to Z.
-Follow the series, explore the workbooks, and let’s grow together in the world of data!
+Follow the series, and let’s grow together in the world of data!
